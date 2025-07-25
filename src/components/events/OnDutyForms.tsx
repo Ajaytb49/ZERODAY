@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FileText, Upload, Calendar, Building, User, Hash } from 'lucide-react';
+import { FileText, Upload, Calendar, Building, User, Hash, CheckCircle, Clock, XCircle } from 'lucide-react';
 
 interface ODForm {
   id: string;
@@ -23,27 +23,39 @@ const OnDutyForms: React.FC = () => {
     {
       id: '1',
       type: 'internal',
-      name: 'John Doe',
-      rollNo: '20CS001',
+      name: 'Rajesh Kumar',
+      rollNo: '20CS045',
       department: 'CSE',
       section: 'A',
-      date: '2024-01-20',
-      eventName: 'Tech Symposium 2024',
+      date: '2024-02-15',
+      eventName: 'Annual Technical Symposium',
       status: 'approved',
       submittedAt: '2024-01-15T10:30:00Z',
     },
     {
       id: '2',
       type: 'external',
-      name: 'Jane Smith',
-      rollNo: '20ECE015',
+      name: 'Priya Sharma',
+      rollNo: '20ECE023',
       department: 'ECE',
       section: 'B',
-      date: '2024-01-25',
-      eventDetails: 'National Level Workshop on IoT and Machine Learning',
+      date: '2024-02-20',
+      eventDetails: 'Inter-College Hackathon on AI and Machine Learning',
       universityName: 'IIT Madras',
       status: 'pending',
       submittedAt: '2024-01-16T14:20:00Z',
+    },
+    {
+      id: '3',
+      type: 'internal',
+      name: 'Arjun Patel',
+      rollNo: '20MECH012',
+      department: 'MECH',
+      section: 'C',
+      date: '2024-02-18',
+      eventName: 'Sports Day - Cricket Tournament',
+      status: 'rejected',
+      submittedAt: '2024-01-17T09:15:00Z',
     }
   ]);
 
@@ -98,11 +110,22 @@ const OnDutyForms: React.FC = () => {
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'approved':
-        return 'bg-green-100 text-green-800';
+        return 'bg-green-100 text-green-800 border-green-200';
       case 'rejected':
-        return 'bg-red-100 text-red-800';
+        return 'bg-red-100 text-red-800 border-red-200';
       default:
-        return 'bg-yellow-100 text-yellow-800';
+        return 'bg-yellow-100 text-yellow-800 border-yellow-200';
+    }
+  };
+
+  const getStatusIcon = (status: string) => {
+    switch (status) {
+      case 'approved':
+        return <CheckCircle className="w-4 h-4" />;
+      case 'rejected':
+        return <XCircle className="w-4 h-4" />;
+      default:
+        return <Clock className="w-4 h-4" />;
     }
   };
 
@@ -110,7 +133,7 @@ const OnDutyForms: React.FC = () => {
     <div className="space-y-6">
       <div>
         <h2 className="text-2xl font-bold text-gray-900">On-Duty Forms</h2>
-        <p className="text-gray-600">Submit OD requests for internal and external events</p>
+        <p className="text-gray-600">Submit On-Duty requests for college and external events</p>
       </div>
 
       {/* Tab Navigation */}
@@ -124,7 +147,7 @@ const OnDutyForms: React.FC = () => {
                 : 'text-gray-500 hover:text-gray-700'
             }`}
           >
-            Internal Events
+            Internal Events OD
           </button>
           <button
             onClick={() => setActiveTab('external')}
@@ -134,12 +157,23 @@ const OnDutyForms: React.FC = () => {
                 : 'text-gray-500 hover:text-gray-700'
             }`}
           >
-            External Events
+            External Events OD
           </button>
         </div>
 
         {/* Form Content */}
         <div className="p-6">
+          <div className="mb-4 p-3 bg-gray-50 rounded-lg">
+            <h4 className="font-medium text-gray-900 mb-1">
+              {activeTab === 'internal' ? 'Internal Event OD Form' : 'External Event OD Form'}
+            </h4>
+            <p className="text-sm text-gray-600">
+              {activeTab === 'internal' 
+                ? 'For events conducted within our college campus'
+                : 'For events conducted by other colleges/universities (requires proof documents)'}
+            </p>
+          </div>
+          
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Common Fields */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -153,6 +187,7 @@ const OnDutyForms: React.FC = () => {
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="Enter your full name"
                   required
                 />
               </div>
@@ -166,6 +201,7 @@ const OnDutyForms: React.FC = () => {
                   value={formData.rollNo}
                   onChange={(e) => setFormData({ ...formData, rollNo: e.target.value })}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="e.g., 20CS045"
                   required
                 />
               </div>
@@ -184,6 +220,7 @@ const OnDutyForms: React.FC = () => {
                   <option value="MECH">Mechanical Engineering</option>
                   <option value="CIVIL">Civil Engineering</option>
                   <option value="IT">Information Technology</option>
+                  <option value="CHEM">Chemical Engineering</option>
                 </select>
               </div>
               <div>
@@ -199,6 +236,7 @@ const OnDutyForms: React.FC = () => {
                   <option value="B">Section B</option>
                   <option value="C">Section C</option>
                   <option value="D">Section D</option>
+                  <option value="E">Section E</option>
                 </select>
               </div>
               <div className="md:col-span-2">
@@ -211,6 +249,7 @@ const OnDutyForms: React.FC = () => {
                   value={formData.date}
                   onChange={(e) => setFormData({ ...formData, date: e.target.value })}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  min={new Date().toISOString().split('T')[0]}
                   required
                 />
               </div>
@@ -218,22 +257,36 @@ const OnDutyForms: React.FC = () => {
 
             {/* Internal Event Fields */}
             {activeTab === 'internal' && (
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Event Name</label>
-                <input
-                  type="text"
-                  value={formData.eventName}
-                  onChange={(e) => setFormData({ ...formData, eventName: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="e.g., Annual Tech Fest, Cultural Program"
-                  required
-                />
+              <div className="space-y-4">
+                <div className="bg-blue-50 p-4 rounded-lg">
+                  <h4 className="font-medium text-blue-900 mb-2">Internal Event Details</h4>
+                  <p className="text-blue-700 text-sm">
+                    This form is for events organized by our college (workshops, fests, competitions, etc.)
+                  </p>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Event Name</label>
+                  <input
+                    type="text"
+                    value={formData.eventName}
+                    onChange={(e) => setFormData({ ...formData, eventName: e.target.value })}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="e.g., Annual Tech Fest, Cultural Program, Sports Day"
+                    required
+                  />
+                </div>
               </div>
             )}
 
             {/* External Event Fields */}
             {activeTab === 'external' && (
               <div className="space-y-4">
+                <div className="bg-orange-50 p-4 rounded-lg">
+                  <h4 className="font-medium text-orange-900 mb-2">External Event Details</h4>
+                  <p className="text-orange-700 text-sm">
+                    This form is for events organized by other colleges/universities. Proof documents are mandatory.
+                  </p>
+                </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Event Details</label>
                   <textarea
@@ -241,7 +294,7 @@ const OnDutyForms: React.FC = () => {
                     onChange={(e) => setFormData({ ...formData, eventDetails: e.target.value })}
                     rows={3}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Provide detailed information about the external event"
+                    placeholder="Provide detailed information about the event (name, type, duration, etc.)"
                     required
                   />
                 </div>
@@ -255,14 +308,14 @@ const OnDutyForms: React.FC = () => {
                     value={formData.universityName}
                     onChange={(e) => setFormData({ ...formData, universityName: e.target.value })}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="e.g., IIT Madras, Anna University"
+                    placeholder="e.g., IIT Madras, Anna University, NIT Trichy"
                     required
                   />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     <Upload className="w-4 h-4 inline mr-1" />
-                    Proof (Documents/Photos)
+                    Proof Documents (Required)
                   </label>
                   <input
                     type="file"
@@ -270,16 +323,20 @@ const OnDutyForms: React.FC = () => {
                     accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
                     onChange={handleFileUpload}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    required
                   />
                   <p className="text-xs text-gray-500 mt-1">
-                    Upload event invitation, registration confirmation, or related documents
+                    Upload event invitation, registration confirmation, brochure, or related documents (PDF, JPG, PNG, DOC)
                   </p>
                   {formData.proof.length > 0 && (
-                    <div className="mt-2">
-                      <p className="text-sm text-gray-600">Selected files:</p>
-                      <ul className="text-xs text-gray-500">
+                    <div className="mt-2 p-2 bg-green-50 rounded">
+                      <p className="text-sm text-green-700 font-medium">Selected files:</p>
+                      <ul className="text-xs text-green-600 mt-1">
                         {formData.proof.map((file, index) => (
-                          <li key={index}>• {file.name}</li>
+                          <li key={index} className="flex items-center space-x-1">
+                            <CheckCircle className="w-3 h-3" />
+                            <span>{file.name} ({(file.size / 1024).toFixed(1)} KB)</span>
+                          </li>
                         ))}
                       </ul>
                     </div>
@@ -291,9 +348,10 @@ const OnDutyForms: React.FC = () => {
             <div className="flex justify-end">
               <button
                 type="submit"
-                className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition-colors font-medium"
+                className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition-colors font-medium flex items-center space-x-2"
               >
-                Submit OD Request
+                <FileText className="w-4 h-4" />
+                <span>Submit OD Request</span>
               </button>
             </div>
           </form>
@@ -303,7 +361,10 @@ const OnDutyForms: React.FC = () => {
       {/* Previous Submissions */}
       <div className="bg-white rounded-lg shadow-sm border">
         <div className="p-6 border-b">
-          <h3 className="text-lg font-semibold text-gray-900">Previous Submissions</h3>
+          <div className="flex justify-between items-center">
+            <h3 className="text-lg font-semibold text-gray-900">Your OD Submissions</h3>
+            <span className="text-sm text-gray-500">{submissions.length} total submissions</span>
+          </div>
         </div>
         <div className="divide-y">
           {submissions.map((submission) => (
@@ -320,38 +381,47 @@ const OnDutyForms: React.FC = () => {
                     </p>
                   </div>
                 </div>
-                <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(submission.status)}`}>
-                  {submission.status.charAt(0).toUpperCase() + submission.status.slice(1)}
+                <span className={`px-3 py-1 rounded-full text-xs font-medium border flex items-center space-x-1 ${getStatusColor(submission.status)}`}>
+                  {getStatusIcon(submission.status)}
+                  <span>{submission.status.charAt(0).toUpperCase() + submission.status.slice(1)}</span>
                 </span>
               </div>
               
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm text-gray-600">
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-sm text-gray-600">
                 <div>
-                  <span className="font-medium">Type:</span>
-                  <p className="capitalize">{submission.type}</p>
+                  <span className="font-medium text-gray-700">Type:</span>
+                  <p className="capitalize text-blue-600">{submission.type} Event</p>
                 </div>
                 <div>
-                  <span className="font-medium">Event Date:</span>
+                  <span className="font-medium text-gray-700">Event Date:</span>
                   <p>{new Date(submission.date).toLocaleDateString()}</p>
                 </div>
                 <div>
-                  <span className="font-medium">Section:</span>
-                  <p>{submission.section}</p>
+                  <span className="font-medium text-gray-700">Department:</span>
+                  <p>{submission.department}-{submission.section}</p>
                 </div>
                 <div>
-                  <span className="font-medium">Submitted:</span>
+                  <span className="font-medium text-gray-700">Submitted:</span>
                   <p>{new Date(submission.submittedAt).toLocaleDateString()}</p>
                 </div>
               </div>
               
               {submission.type === 'external' && submission.universityName && (
                 <div className="mt-2 text-sm text-gray-600">
-                  <span className="font-medium">Institution:</span> {submission.universityName}
+                  <span className="font-medium text-gray-700">Institution:</span> 
+                  <span className="ml-1 text-purple-600">{submission.universityName}</span>
                 </div>
               )}
             </div>
           ))}
         </div>
+        {submissions.length === 0 && (
+          <div className="p-12 text-center">
+            <FileText className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+            <h3 className="text-lg font-medium text-gray-900 mb-2">No Submissions Yet</h3>
+            <p className="text-gray-500">Your OD form submissions will appear here once you submit them.</p>
+          </div>
+        )}
       </div>
     </div>
   );

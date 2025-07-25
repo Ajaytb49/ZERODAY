@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Calendar, MapPin, Users, ExternalLink, Plus, Edit, Trash2 } from 'lucide-react';
+import { Calendar, MapPin, Users, ExternalLink, Plus, Edit, Trash2, Shield } from 'lucide-react';
 
 interface ExternalEvent {
   id: string;
@@ -19,27 +19,39 @@ const ExternalEvents: React.FC = () => {
   const [events, setEvents] = useState<ExternalEvent[]>([
     {
       id: '1',
-      title: 'National Tech Symposium 2024',
-      description: 'A comprehensive technical symposium featuring workshops, competitions, and keynote sessions from industry leaders.',
+      title: 'Inter-College Hackathon 2024',
+      description: 'Join the biggest hackathon of the year with exciting prizes and networking opportunities.',
       college: 'IIT Madras',
-      date: '2024-03-15',
+      date: '2024-02-15',
       time: '09:00 AM',
       location: 'Chennai, Tamil Nadu',
-      registrationLink: 'https://iitm.ac.in/techsym2024',
+      registrationLink: 'https://iitm.ac.in/hackathon2024',
       category: 'Technical',
-      deadline: '2024-03-10',
+      deadline: '2024-02-10',
     },
     {
       id: '2',
-      title: 'Inter-College Cultural Fest',
-      description: 'Celebrate arts, music, dance, and literature in this grand cultural extravaganza.',
+      title: 'Bharatanatyam Competition',
+      description: 'Classical dance competition open to all college students with cash prizes.',
       college: 'Anna University',
-      date: '2024-03-20',
+      date: '2024-02-20',
       time: '10:00 AM',
       location: 'Chennai, Tamil Nadu',
-      registrationLink: 'https://annauniv.edu/cultfest2024',
+      registrationLink: 'https://annauniv.edu/dance2024',
       category: 'Cultural',
-      deadline: '2024-03-15',
+      deadline: '2024-02-15',
+    },
+    {
+      id: '3',
+      title: 'National Science Exhibition',
+      description: 'Showcase your innovative projects and compete with students from across the country.',
+      college: 'NIT Trichy',
+      date: '2024-02-25',
+      time: '09:30 AM',
+      location: 'Tiruchirappalli, Tamil Nadu',
+      registrationLink: 'https://nitt.edu/sciexpo2024',
+      category: 'Academic',
+      deadline: '2024-02-18',
     }
   ]);
 
@@ -86,10 +98,23 @@ const ExternalEvents: React.FC = () => {
 
   return (
     <div className="space-y-6">
+      {/* Admin Notice */}
+      {isAdmin && (
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+          <div className="flex items-center space-x-2">
+            <Shield className="w-5 h-5 text-blue-600" />
+            <span className="text-blue-800 font-medium">Admin Access</span>
+          </div>
+          <p className="text-blue-700 text-sm mt-1">
+            You have administrative privileges to manage external events from other colleges.
+          </p>
+        </div>
+      )}
+
       <div className="flex justify-between items-center">
         <div>
           <h2 className="text-2xl font-bold text-gray-900">External Events</h2>
-          <p className="text-gray-600">Discover and participate in events from other colleges</p>
+          <p className="text-gray-600">Discover events from other colleges and universities</p>
         </div>
         {isAdmin && (
           <button
@@ -104,7 +129,7 @@ const ExternalEvents: React.FC = () => {
 
       {showAddForm && (
         <div className="bg-white rounded-lg shadow-md p-6 border">
-          <h3 className="text-lg font-semibold mb-4">Add New External Event</h3>
+          <h3 className="text-lg font-semibold mb-4">Add External Event (Admin Only)</h3>
           <form onSubmit={handleAddEvent} className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
@@ -167,6 +192,7 @@ const ExternalEvents: React.FC = () => {
                   <option value="Sports">Sports</option>
                   <option value="Academic">Academic</option>
                   <option value="Workshop">Workshop</option>
+                  <option value="Competition">Competition</option>
                 </select>
               </div>
               <div>
@@ -265,16 +291,30 @@ const ExternalEvents: React.FC = () => {
                   href={event.registrationLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center space-x-2 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors text-sm font-medium"
+                  className="inline-flex items-center space-x-2 bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition-colors text-sm font-medium w-full justify-center"
                 >
-                  <span>Register Now</span>
+                  <span>Register for Event</span>
                   <ExternalLink className="w-4 h-4" />
                 </a>
+              )}
+              {!event.registrationLink && (
+                <div className="text-center py-2 text-gray-500 text-sm">
+                  Registration link not available
+                </div>
               )}
             </div>
           </div>
         ))}
       </div>
+      {events.length === 0 && (
+        <div className="text-center py-12">
+          <Calendar className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+          <h3 className="text-lg font-medium text-gray-900 mb-2">No External Events</h3>
+          <p className="text-gray-500">
+            {isAdmin ? 'Add the first external event to get started.' : 'Check back later for new events from other colleges.'}
+          </p>
+        </div>
+      )}
     </div>
   );
 };

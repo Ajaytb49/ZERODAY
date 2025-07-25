@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Users, Plus, Send, Filter, Search } from 'lucide-react';
+import { Users, Plus, Send, Filter, Search, UserCheck, Clock } from 'lucide-react';
 
 interface TeamRequest {
   id: string;
@@ -31,30 +31,43 @@ const TeamUp: React.FC = () => {
   const [teamRequests, setTeamRequests] = useState<TeamRequest[]>([
     {
       id: '1',
-      title: 'Web Development Team for Hackathon',
-      description: 'Looking for frontend and backend developers to participate in the upcoming inter-college hackathon.',
+      title: 'Need Team for Inter-College Hackathon',
+      description: 'Looking for passionate developers to join our team for the upcoming 48-hour hackathon. We need frontend, backend, and UI/UX skills.',
       category: 'Technical',
       requiredMembers: 4,
       currentMembers: 2,
-      createdBy: 'John Doe (CSE)',
+      createdBy: 'Rahul Kumar (20CS045)',
       createdAt: '2024-01-15',
       studentType: 'Both',
       department: 'CSE',
-      skills: ['React', 'Node.js', 'MongoDB'],
+      skills: ['React', 'Node.js', 'Python', 'UI/UX'],
       deadline: '2024-02-01',
     },
     {
       id: '2',
-      title: 'Dance Team for Cultural Fest',
-      description: 'Forming a dance team for the annual cultural festival. All dance forms welcome!',
+      title: 'Classical Dance Group Formation',
+      description: 'Forming a Bharatanatyam dance group for upcoming cultural competitions. Looking for experienced dancers.',
       category: 'Cultural',
-      requiredMembers: 8,
+      requiredMembers: 6,
       currentMembers: 3,
-      createdBy: 'Sarah Smith (EEE)',
+      createdBy: 'Priya Sharma (20ECE023)',
       createdAt: '2024-01-14',
       studentType: 'Hosteller',
       department: 'Any',
       deadline: '2024-01-25',
+    },
+    {
+      id: '3',
+      title: 'Cricket Team for Inter-Department Tournament',
+      description: 'Need players for our department cricket team. All positions open, especially looking for bowlers.',
+      category: 'Sports',
+      requiredMembers: 11,
+      currentMembers: 7,
+      createdBy: 'Arjun Patel (20MECH012)',
+      createdAt: '2024-01-16',
+      studentType: 'Day Scholar',
+      department: 'MECH',
+      deadline: '2024-01-30',
     }
   ]);
 
@@ -143,19 +156,23 @@ const TeamUp: React.FC = () => {
       <div className="flex justify-between items-center">
         <div>
           <h2 className="text-2xl font-bold text-gray-900">Team Up</h2>
-          <p className="text-gray-600">Form teams and collaborate with fellow students</p>
+          <p className="text-gray-600">Create team requests and connect with fellow students</p>
         </div>
         <button
           onClick={() => setShowCreateForm(true)}
           className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center space-x-2"
         >
           <Plus className="w-5 h-5" />
-          <span>Create Team Request</span>
+          <span>Create Request</span>
         </button>
       </div>
 
       {/* Filters */}
       <div className="bg-white rounded-lg shadow-sm p-4 border">
+        <div className="flex items-center space-x-2 mb-3">
+          <Filter className="w-5 h-5 text-gray-500" />
+          <h3 className="font-medium text-gray-900">Filter Team Requests</h3>
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
@@ -169,10 +186,11 @@ const TeamUp: React.FC = () => {
               <option value="Cultural">Cultural</option>
               <option value="Sports">Sports</option>
               <option value="Academic">Academic</option>
+              <option value="Project">Project Work</option>
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Student Type</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Student Type Preference</label>
             <select
               value={filter.studentType}
               onChange={(e) => setFilter({ ...filter, studentType: e.target.value })}
@@ -197,6 +215,7 @@ const TeamUp: React.FC = () => {
               <option value="EEE">EEE</option>
               <option value="MECH">MECH</option>
               <option value="CIVIL">CIVIL</option>
+              <option value="IT">IT</option>
               <option value="Any">Any Department</option>
             </select>
           </div>
@@ -206,16 +225,20 @@ const TeamUp: React.FC = () => {
       {/* Create Team Form */}
       {showCreateForm && (
         <div className="bg-white rounded-lg shadow-md p-6 border">
-          <h3 className="text-lg font-semibold mb-4">Create Team Request</h3>
+          <h3 className="text-lg font-semibold mb-4">Create New Team Request</h3>
+          <p className="text-gray-600 text-sm mb-4">
+            Fill out the details below to create a team request. Other students will be able to see and join your team.
+          </p>
           <form onSubmit={handleCreateTeam} className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Team Title</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Request Title</label>
                 <input
                   type="text"
                   value={newTeamRequest.title}
                   onChange={(e) => setNewTeamRequest({ ...newTeamRequest, title: e.target.value })}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="e.g., Need team for hackathon, Looking for dance partners"
                   required
                 />
               </div>
@@ -230,10 +253,11 @@ const TeamUp: React.FC = () => {
                   <option value="Cultural">Cultural</option>
                   <option value="Sports">Sports</option>
                   <option value="Academic">Academic</option>
+                  <option value="Project">Project Work</option>
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Required Members</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Total Team Size Needed</label>
                 <input
                   type="number"
                   min="2"
@@ -268,6 +292,7 @@ const TeamUp: React.FC = () => {
                   <option value="EEE">EEE</option>
                   <option value="MECH">MECH</option>
                   <option value="CIVIL">CIVIL</option>
+                  <option value="IT">IT</option>
                 </select>
               </div>
               <div>
@@ -287,7 +312,20 @@ const TeamUp: React.FC = () => {
                 onChange={(e) => setNewTeamRequest({ ...newTeamRequest, description: e.target.value })}
                 rows={3}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Describe what you're looking for, required skills, event details, etc."
                 required
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Required Skills (Optional)</label>
+              <input
+                type="text"
+                placeholder="e.g., React, Python, Dancing, Cricket, etc. (comma separated)"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                onChange={(e) => {
+                  const skills = e.target.value.split(',').map(skill => skill.trim()).filter(skill => skill);
+                  setNewTeamRequest({ ...newTeamRequest, skills });
+                }}
               />
             </div>
             <div className="flex space-x-3">
@@ -295,7 +333,7 @@ const TeamUp: React.FC = () => {
                 type="submit"
                 className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors"
               >
-                Create Request
+                Post Team Request
               </button>
               <button
                 type="button"
@@ -312,7 +350,10 @@ const TeamUp: React.FC = () => {
       {/* Join Request Form */}
       {showJoinForm && (
         <div className="bg-white rounded-lg shadow-md p-6 border">
-          <h3 className="text-lg font-semibold mb-4">Join Team Request</h3>
+          <h3 className="text-lg font-semibold mb-4">Send Join Request</h3>
+          <p className="text-gray-600 text-sm mb-4">
+            Fill out your details to send a request to join this team. The team creator will review your request.
+          </p>
           <form onSubmit={handleJoinRequest} className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
@@ -349,6 +390,7 @@ const TeamUp: React.FC = () => {
                   <option value="EEE">EEE</option>
                   <option value="MECH">MECH</option>
                   <option value="CIVIL">CIVIL</option>
+                  <option value="IT">IT</option>
                 </select>
               </div>
               <div>
@@ -370,7 +412,7 @@ const TeamUp: React.FC = () => {
                 onChange={(e) => setJoinRequestForm({ ...joinRequestForm, message: e.target.value })}
                 rows={3}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Tell them why you'd be a great addition to the team..."
+                placeholder="Introduce yourself and explain why you'd be a great fit for this team..."
               />
             </div>
             <div className="flex space-x-3">
@@ -378,7 +420,7 @@ const TeamUp: React.FC = () => {
                 type="submit"
                 className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors"
               >
-                Send Request
+                Send Join Request
               </button>
               <button
                 type="button"
@@ -400,31 +442,35 @@ const TeamUp: React.FC = () => {
               <span className="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full font-medium">
                 {team.category}
               </span>
-              <span className="text-xs text-gray-500">
-                {team.currentMembers}/{team.requiredMembers} members
-              </span>
+              <div className="flex items-center space-x-1 text-xs text-gray-500">
+                <UserCheck className="w-3 h-3" />
+                <span>{team.currentMembers}/{team.requiredMembers}</span>
+              </div>
             </div>
             
             <h3 className="text-lg font-semibold text-gray-900 mb-2">{team.title}</h3>
-            <p className="text-gray-600 text-sm mb-4">{team.description}</p>
+            <p className="text-gray-600 text-sm mb-4 line-clamp-3">{team.description}</p>
             
             <div className="space-y-2 text-sm text-gray-500 mb-4">
               <div className="flex justify-between">
                 <span>Created by:</span>
-                <span className="font-medium">{team.createdBy}</span>
+                <span className="font-medium text-gray-700">{team.createdBy}</span>
               </div>
               <div className="flex justify-between">
                 <span>Student Type:</span>
-                <span className="font-medium">{team.studentType}</span>
+                <span className="font-medium text-gray-700">{team.studentType}</span>
               </div>
               <div className="flex justify-between">
                 <span>Department:</span>
-                <span className="font-medium">{team.department}</span>
+                <span className="font-medium text-gray-700">{team.department}</span>
               </div>
               {team.deadline && (
-                <div className="flex justify-between">
-                  <span>Deadline:</span>
-                  <span className="font-medium">{new Date(team.deadline).toLocaleDateString()}</span>
+                <div className="flex justify-between items-center">
+                  <span className="flex items-center space-x-1">
+                    <Clock className="w-3 h-3" />
+                    <span>Deadline:</span>
+                  </span>
+                  <span className="font-medium text-red-600">{new Date(team.deadline).toLocaleDateString()}</span>
                 </div>
               )}
             </div>
@@ -434,7 +480,7 @@ const TeamUp: React.FC = () => {
                 <p className="text-xs text-gray-500 mb-2">Required Skills:</p>
                 <div className="flex flex-wrap gap-1">
                   {team.skills.map((skill, index) => (
-                    <span key={index} className="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded">
+                    <span key={index} className="bg-green-100 text-green-700 text-xs px-2 py-1 rounded">
                       {skill}
                     </span>
                   ))}
@@ -453,12 +499,24 @@ const TeamUp: React.FC = () => {
                 className="bg-blue-600 text-white px-3 py-1 rounded-md hover:bg-blue-700 transition-colors text-sm font-medium disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center space-x-1"
               >
                 <Send className="w-4 h-4" />
-                <span>Join</span>
+                <span>{team.currentMembers >= team.requiredMembers ? 'Full' : 'Join'}</span>
               </button>
             </div>
           </div>
         ))}
       </div>
+
+      {filteredTeams.length === 0 && (
+        <div className="text-center py-12">
+          <Users className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+          <h3 className="text-lg font-medium text-gray-900 mb-2">No Team Requests Found</h3>
+          <p className="text-gray-500">
+            {teamRequests.length === 0 
+              ? 'Be the first to create a team request!' 
+              : 'Try adjusting your filters to see more results.'}
+          </p>
+        </div>
+      )}
     </div>
   );
 };
